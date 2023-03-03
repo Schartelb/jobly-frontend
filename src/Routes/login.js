@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useHistory } from "react-router-dom";
 import {
     Card,
     CardBody,
@@ -6,18 +7,21 @@ import {
     CardText,
 } from "reactstrap";
 
-const Login = () => {
-    console.log(`Navigated to login`)
-    const [formData, setFormData] = useState({ username: "", password: "" })
+const LoginPage = ({login}) => {
+    const [formData, setFormData] = useState({ username: "testuser", password: "password" })
+    const history= useHistory()
+
     const handleChange = evt => {
         const { name, value } = evt.target;
-        setFormData(fData => ({
-            ...fData,
+        setFormData(formData => ({
+            ...formData,
             [name]: value
         }));
     }
     const handleSubmit = evt => {
         evt.preventDefault()
+        login(formData)
+        history.push('/')     
     }
     return (
         <section className="col-md-4">
@@ -30,18 +34,18 @@ const Login = () => {
                         <form onSubmit={handleSubmit}>
                             <label className="input" htmlFor="username">Username: </label>
                             <input
+                                type='text'
                                 id="username"
                                 name="username"
-                                value={formData.username}
                                 onChange={handleChange}
                             />
                             <br />
 
                             <label className="input" htmlFor="password">Password: </label>
                             <input
+                                type='password'
                                 id="password"
                                 name="password"
-                                value={formData.password}
                                 onChange={handleChange}
                             />
                             <button>Login to Jobly!</button>
@@ -53,4 +57,4 @@ const Login = () => {
     )
 }
 
-export default Login
+export default LoginPage

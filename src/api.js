@@ -22,8 +22,8 @@ class JoblyApi {
     const url = `${BASE_URL}/${endpoint}`;
     const headers = { Authorization: `Bearer ${JoblyApi.token}` };
     const params = (method === "get")
-        ? data
-        : {};
+      ? data
+      : {};
 
     try {
       return (await axios({ url, method, data, params, headers })).data;
@@ -44,9 +44,82 @@ class JoblyApi {
   }
 
   /** Get details on job by id */
-    static async getJob(handle) {
+  static async getJob(handle) {
     let res = await this.request(`jobs/${handle}`);
     return res.job;
+  }
+
+  /**Get List of all Companies/Jobs */
+  static async getCompanies() {
+    let res = await this.request('companies')
+    return res.companies
+  }
+  static async getJobs() {
+    let res = await this.request('jobs')
+    return res.jobs
+  }
+  
+  static async searchCompanies(nameLike) {
+    let res = await this.request('companies', { name: nameLike })
+    console.log(res)
+    return res.companies
+  }
+
+  static async userLogin(userData) {
+    const { username, password } = userData
+    let res = await this.request('auth/token',
+     { username, password },
+      "post")
+    return res.token
+  }
+
+  static async userRegister(userData) {
+    const { username, password, firstName, lastName, email } = userData
+    try{
+    let res = await this.request('auth/register',
+     { username, password, firstName, lastName, email },
+      "post")
+      return res.token
+    }catch(error){
+      console.log(error)
+    }
+  }
+
+  static async userEdit(userData){
+    const { username, firstName, lastName, password, email } = userData
+    try{
+      let res = await this.request(`users/${username}`,
+      { firstName, lastName, password, email },
+      "patch")
+      return res
+    }catch(error){
+      console.log(error)
+    }
+  }
+
+  static async userInfo(username){
+    try{
+      let res = await this.request(`users/${username}`,
+      username,
+      "get")
+      return res.user
+    }catch(error){
+      console.log(error)
+    }
+  }
+
+
+  static async applyToJob(applyData){
+    const {username, jobId} = applyData
+    try{
+      let res = await this.request(`users/${username}/jobs/${jobId}`,
+      {username, jobId},
+      "post")
+      return res.applied
+    }catch(error){
+      console.log(error)
+    }
+    
   }
 }
 
@@ -54,5 +127,5 @@ export default JoblyApi
 
 // for now, put token ("testuser" / "password" on class)
 JoblyApi.token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZ" +
-    "SI6InRlc3R1c2VyIiwiaXNBZG1pbiI6ZmFsc2UsImlhdCI6MTU5ODE1OTI1OX0." +
-    "FtrMwBQwe6Ue-glIFgz_Nf8XxRT2YecFCiSpYL0fCXc";
+  "SI6InRlc3R1c2VyIiwiaXNBZG1pbiI6ZmFsc2UsImlhdCI6MTU5ODE1OTI1OX0." +
+  "FtrMwBQwe6Ue-glIFgz_Nf8XxRT2YecFCiSpYL0fCXc";

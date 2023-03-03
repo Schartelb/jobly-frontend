@@ -1,27 +1,32 @@
-import React from 'react'
+import React, {useContext} from 'react'
 import { Link } from "react-router-dom";
-import { Card, CardBody, CardTitle, CardText, ListGroup, ListGroupItem} from "reactstrap";
+import { Card, CardBody, CardTitle, CardText } from "reactstrap";
+import currUserContext from '../Context/CurrUserContext';
 
+const JobCard = ({ applyToJob, single }) => {
+  const currUser = useContext(currUserContext)
 
-const JobCard=(single)=>{
-    console.log(single)
-return(
-<section className="col-md-4">
-        <Card>
-          <CardBody>
-            <CardTitle className="font-weight-bold text-center">
-              {single.title}
-            </CardTitle>
-            <CardText>
-                {single.company}
-              Salary: {single.salary}<br/>
-              Equity: {single.equity}<br />
-              {/* <Link to={`/companies/${single.company.handle}`}>{single.company.name}</Link> */}
-            </CardText>
+  return (
+    <section className="col-md-4">
+      <Card>
+        <CardBody>
+          <CardTitle className="font-weight-bold text-center" >
+            {single.title}
+          </CardTitle>
+          <CardText>
+            Salary: {single.salary}<br />
+            Equity: {single.equity}<br />
+            <br />
+            {currUser.applications.includes(single.id) ?
+              <button onClick={() => { applyToJob(single.id) }}>Apply Now!</button> :
+              <>Applied!</>}
+            <Link to={`/companies/${single.companyHandle}`}>{single.companyName}</Link>
+          </CardText>
 
-          </CardBody>
-        </Card> 
-      </section>
-      )}
+        </CardBody>
+      </Card>
+    </section>
+  )
+}
 
 export default JobCard

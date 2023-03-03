@@ -1,10 +1,10 @@
 import React from "react";
 
 const Home=()=>{
-    console.log("Navigated Home")
+    let username = (window.localStorage.getItem("username"))
     return(
         <div>
-            This is Jobly
+            Welcome to Jobly{username!=='undefined' && <>, {username}</>}! 
         </div>
     )
 }
